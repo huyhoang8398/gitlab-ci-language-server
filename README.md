@@ -15,8 +15,8 @@ A Language Server Protocol (LSP) implementation for GitLab CI YAML files, design
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/huyhoang8398/gitlab-ci-language-server
-   cd gitlab-ci-language-server
+   git clone https://github.com/huyhoang8398/gitlab-lsp
+   cd gitlab-lsp
    ```
 2. Install dependencies:
    ```bash
@@ -32,20 +32,26 @@ A Language Server Protocol (LSP) implementation for GitLab CI YAML files, design
 2. Configure the language server in your Neovim setup:
 ```lua
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-    pattern = "*.gitlab-ci*.{yml,yaml}",
-    callback = function()
-        vim.bo.filetype = "yaml.gitlab"
-    end,
+	pattern = "*.gitlab-ci*.{yml,yaml}",
+	callback = function()
+		vim.bo.filetype = "yaml.gitlab"
+	end,
 })
+
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = "yaml.gitlab",
-    callback = function()
-        vim.lsp.start({
-            name = "gitlab_ci_ls",
-            cmd = { "node", "/home/kn/dev/personal/gitlab-ci-ls/dist/server.js", "--stdio" },
-            root_dir = vim.fs.dirname(vim.fs.find({ ".gitlab-ci.yml" }, { upward = true })[1]),
-        })
-    end,
+	pattern = "yaml.gitlab",
+	callback = function()
+		vim.lsp.start({
+			name = "gitlab_ci_ls",
+			cmd = { "node", "/path/to/gitlab-lsp/dist/server.js", "--stdio" },
+			root_dir = vim.fs.dirname(
+				vim.fs.find(
+					{ ".gitlab-ci.yml", ".gitlab-ci.yaml", "*.gitlab-ci*.yml", "*.gitlab-ci*.yaml" },
+					{ upward = true }
+				)[1]
+			),
+		})
+	end,
 })
 ```
 

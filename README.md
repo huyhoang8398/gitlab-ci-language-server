@@ -2,6 +2,10 @@
 
 A Language Server Protocol (LSP) implementation for GitLab CI YAML files, designed for Neovim.
 
+## Demo
+
+![](./static/demo.mp4)
+
 ## Features
 - Syntax validation for `.gitlab-ci.yml` files
 - Autocompletion for GitLab CI keywords

@@ -4,7 +4,7 @@ import { getGitLabCISchema } from './schema';
 import { gitlabPredefinedVariables } from './gitlab-variables';
 
 interface GitLabCISchema {
-  [key: string]: { description?: string; type?: string };
+  [key: string]: { description?: string; type?: string; allowedValues?: string[]; examples?: string[] };
 }
 
 export async function provideHover(params: HoverParams): Promise<Hover | null> {
@@ -40,17 +40,27 @@ export async function provideHover(params: HoverParams): Promise<Hover | null> {
   const schema = getGitLabCISchema() as GitLabCISchema;
   const keywordInfo = schema[word];
 
-  if (keywordInfo?.description) {
+  if (keywordInfo) {
+    const content = [
+      `## ${word}`,
+      '',
+      keywordInfo.description,
+      '',
+      `**Type**: \`${keywordInfo.type}\``,
+    ];
+
+    if (keywordInfo.allowedValues) {
+      content.push('', '**Allowed Values**:', keywordInfo.allowedValues.map(v => `- \`${v}\``).join('\n'));
+    }
+
+    if (keywordInfo.examples) {
+      content.push('', '**Examples**:', '```yaml', ...keywordInfo.examples, '```');
+    }
+
     return {
       contents: {
         kind: 'markdown',
-        value: [
-          `## ${word}`,
-          '',
-          keywordInfo.description,
-          '',
-          keywordInfo.type ? `**Type**: \`${keywordInfo.type}\`` : ''
-        ].join('\n')
+        value: content.join('\n')
       }
     };
   }

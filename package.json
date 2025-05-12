@@ -1,0 +1,19 @@
+{
+  "name": "gitlab-ci-ls",
+  "version": "1.0.0",
+  "description": "GitLab CI YAML Language Server for Neovim",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js --stdio"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.5.4"
+  }
+}

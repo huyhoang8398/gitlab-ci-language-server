@@ -30,26 +30,24 @@ A Language Server Protocol (LSP) implementation for GitLab CI YAML files, design
 ## Neovim Integration
 1. Ensure you have an LSP client installed in Neovim (e.g., `nvim-lspconfig`).
 2. Configure the language server in your Neovim setup:
-
-   ```lua
-   local lspconfig = require('lspconfig')
-   lspconfig.gitlab_ci_ls = {
-     cmd = { "node", "/path/to/gitlab-ci-ls/dist/server.js", "--stdio" },
-     filetypes = { "yaml.gitlab" },
-     root_dir = lspconfig.util.root_pattern(".gitlab-ci.yml", ".gitlab"),
-   }
-   ```
-
-3. Add a filetype detection for `.gitlab-ci.yml` (optional):
-
-   ```lua
-   vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-     pattern = { ".gitlab-ci.yml", ".gitlab-ci.yaml", "*gitlab-ci*.yml", "*gitlab-ci*.yaml" },
-     callback = function()
-       vim.bo.filetype = "yaml.gitlab"
-     end,
-   })
-   ```
+```lua
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = "*.gitlab-ci*.{yml,yaml}",
+    callback = function()
+        vim.bo.filetype = "yaml.gitlab"
+    end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "yaml.gitlab",
+    callback = function()
+        vim.lsp.start({
+            name = "gitlab_ci_ls",
+            cmd = { "node", "/home/kn/dev/personal/gitlab-ci-ls/dist/server.js", "--stdio" },
+            root_dir = vim.fs.dirname(vim.fs.find({ ".gitlab-ci.yml" }, { upward = true })[1]),
+        })
+    end,
+})
+```
 
 ## Usage
 - Open a `.gitlab-ci.yml` file in Neovim.

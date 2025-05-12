@@ -19,7 +19,7 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       textDocumentSync: TextDocumentSyncKind.Incremental,
       completionProvider: {
         resolveProvider: true,
-        triggerCharacters: ['.', ':'],
+        triggerCharacters: ['.', ':', '$'], // Add $ as trigger character
       },
       hoverProvider: true,
       documentSymbolProvider: true,

@@ -1,8 +1,8 @@
 import { Hover, HoverParams } from 'vscode-languageserver/node';
 import { documents } from './connection';
 import { getGitLabCISchema } from './schema';
+import { gitlabPredefinedVariables } from './gitlab-variables';
 
-// Define schema type with index signature
 interface GitLabCISchema {
   [key: string]: { description?: string; type?: string };
 }
@@ -15,15 +15,43 @@ export async function provideHover(params: HoverParams): Promise<Hover | null> {
   const offset = document.offsetAt(params.position);
   const word = getWordAt(text, offset);
 
-  const schema = getGitLabCISchema() as GitLabCISchema;
-  const description = schema[word]?.description;
-
-  if (description) {
+  // Check for GitLab variables (with or without $ prefix)
+  const variableName = word.startsWith('$') ? word.substring(1) : word;
+  const variableInfo = gitlabPredefinedVariables[variableName];
+  
+  if (variableInfo) {
     return {
       contents: {
         kind: 'markdown',
-        value: `**${word}**\n\n${description}`,
-      },
+        value: [
+          `## ${word}`,
+          '',
+          variableInfo.description,
+          '',
+          '**Details**',
+          `- Type: \`${variableInfo.type}\``,
+          `- Scope: \`${variableInfo.scope}\``,
+        ].join('\n')
+      }
+    };
+  }
+
+  // Check for GitLab CI keywords
+  const schema = getGitLabCISchema() as GitLabCISchema;
+  const keywordInfo = schema[word];
+
+  if (keywordInfo?.description) {
+    return {
+      contents: {
+        kind: 'markdown',
+        value: [
+          `## ${word}`,
+          '',
+          keywordInfo.description,
+          '',
+          keywordInfo.type ? `**Type**: \`${keywordInfo.type}\`` : ''
+        ].join('\n')
+      }
     };
   }
 
@@ -31,7 +59,8 @@ export async function provideHover(params: HoverParams): Promise<Hover | null> {
 }
 
 function getWordAt(text: string, offset: number): string {
-  const regex = /\w+/g;
+  // Updated regex to include $ for variables
+  const regex = /[\$\w]+/g;
   let match;
   while ((match = regex.exec(text))) {
     if (match.index <= offset && offset <= match.index + match[0].length) {

@@ -4,7 +4,7 @@ A Language Server Protocol (LSP) implementation for GitLab CI YAML files, design
 
 ## Demo
 
-[![demo](https://asciinema.org/a/718963.svg)](https://asciinema.org/a/718963)
+![demo](https://asciinema.org/a/718963.svg)](https://asciinema.org/a/718963)
 
 ## Features
 - Syntax validation for `.gitlab-ci.yml` files

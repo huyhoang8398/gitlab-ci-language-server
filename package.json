@@ -1,6 +1,6 @@
 {
   "name": "gitlab-ci-ls",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Language Server Protocol (LSP) server for GitLab CI YAML files",
   "main": "dist/server.js",
   "bin": {

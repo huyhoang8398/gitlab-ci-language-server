@@ -5,15 +5,18 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js --stdio"
+    "start": "node dist/server.js --stdio",
+    "pkg": "pkg . --targets node18-linux-x64,node18-macos-x64,node18-macos-arm64,node18-win-x64 --output bin/gitlab-ci-ls"
   },
-  "dependencies": {
-    "js-yaml": "^4.1.0",
-    "vscode-languageserver": "^9.0.1",
-    "vscode-languageserver-textdocument": "^1.0.11"
+  "bin": {
+    "gitlab-ci-ls": "dist/server.js"
+  },
+  "pkg": {
+    "assets": ["dist/**/*"],
+    "outputPath": "bin"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.9",
-    "typescript": "^5.5.4"
+    "pkg": "^5.8.1",
+    "typescript": "^5.0.0"
   }
 }

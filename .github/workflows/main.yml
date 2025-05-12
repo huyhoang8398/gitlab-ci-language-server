@@ -1,13 +1,31 @@
-name: Build and Release
+name: Build and Release Binaries
 
 on:
   push:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-x64
+            binary: gitlab-ci-ls-linux
+          - os: macos-latest
+            target: macos-x64
+            binary: gitlab-ci-ls-macos
+          - os: macos-latest
+            target: macos-arm64
+            binary: gitlab-ci-ls-macos-arm64
+          - os: windows-latest
+            target: win-x64
+            binary: gitlab-ci-ls.exe
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,13 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
+      - name: Build TypeScript
         run: npm run build
 
-      - name: Create tarball
-        run: npm pack
+      - name: Build binary
+        run: npm run pkg -- --targets node18-${{ matrix.target }} --output bin/${{ matrix.binary }}
 
-      - name: Release
+      - name: Upload binary to release
         uses: softprops/action-gh-release@v1
         with:
-          files: gitlab-ci-ls-*.tgz
+          files: bin/${{ matrix.binary }}

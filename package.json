@@ -1,6 +1,6 @@
 {
   "name": "gitlab-ci-ls",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitLab CI YAML Language Server for Neovim",
   "main": "dist/server.js",
   "scripts": {

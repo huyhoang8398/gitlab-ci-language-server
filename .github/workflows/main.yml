@@ -17,15 +17,6 @@ jobs:
           - os: ubuntu-latest
             target: linux-x64
             binary: gitlab-ci-ls-linux
-          - os: macos-latest
-            target: macos-x64
-            binary: gitlab-ci-ls-macos
-          - os: macos-latest
-            target: macos-arm64
-            binary: gitlab-ci-ls-macos-arm64
-          - os: windows-latest
-            target: win-x64
-            binary: gitlab-ci-ls.exe
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

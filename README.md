@@ -1,0 +1,65 @@
+# GitLab CI YAML Language Server
+
+A Language Server Protocol (LSP) implementation for GitLab CI YAML files, designed for Neovim.
+
+## Features
+- Syntax validation for `.gitlab-ci.yml` files
+- Autocompletion for GitLab CI keywords
+- Hover information for keywords
+- Document symbols for navigation
+- Formatting support
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/huyhoang8398/gitlab-ci-language-server
+   cd gitlab-ci-language-server
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Build the project:
+   ```bash
+   npm run build
+   ```
+
+## Neovim Integration
+1. Ensure you have an LSP client installed in Neovim (e.g., `nvim-lspconfig`).
+2. Configure the language server in your Neovim setup:
+
+   ```lua
+   local lspconfig = require('lspconfig')
+   lspconfig.gitlab_ci_ls = {
+     cmd = { "node", "/path/to/gitlab-ci-ls/dist/server.js", "--stdio" },
+     filetypes = { "yaml.gitlab" },
+     root_dir = lspconfig.util.root_pattern(".gitlab-ci.yml", ".gitlab"),
+   }
+   ```
+
+3. Add a filetype detection for `.gitlab-ci.yml` (optional):
+
+   ```lua
+   vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+     pattern = { ".gitlab-ci.yml", ".gitlab-ci.yaml", "*gitlab-ci*.yml", "*gitlab-ci*.yaml" },
+     callback = function()
+       vim.bo.filetype = "yaml.gitlab"
+     end,
+   })
+   ```
+
+## Usage
+- Open a `.gitlab-ci.yml` file in Neovim.
+- Use LSP features like:
+  - Autocompletion (`<C-x><C-o>` or your mapping)
+  - Hover (`:lua vim.lsp.buf.hover()`)
+  - Go to symbol (`:lua vim.lsp.buf.document_symbol()`)
+  - Format document (`:lua vim.lsp.buf.format()`)
+
+## Development
+- Build: `npm run build`
+- Start: `npm start`
+- Add new features by extending the providers in `src/`.
+
+## License
+Licensed under the Apache License, Version 2.0. See the [LICENSE](./LICENSE) file for details.

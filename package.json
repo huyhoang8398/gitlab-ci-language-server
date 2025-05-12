@@ -1,10 +1,10 @@
 {
   "name": "gitlab-ci-ls",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Language Server Protocol (LSP) server for GitLab CI YAML files",
   "main": "dist/server.js",
   "bin": {
-    "gitlab-ci-ls": "./bin/gitlab-ci-ls.js"
+    "gitlab-ci-ls": "bin/gitlab-ci-ls.js"
   },
   "scripts": {
     "build": "tsc",
@@ -12,7 +12,9 @@
     "pkg": "pkg dist/server.js --targets node18-linux-x64 --output bin/gitlab-ci-ls-linux"
   },
   "pkg": {
-    "assets": ["dist/**/*"],
+    "assets": [
+      "dist/**/*"
+    ],
     "outputPath": "bin"
   },
   "dependencies": {

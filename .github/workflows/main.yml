@@ -1,4 +1,4 @@
-name: Build and Release Binaries
+name: Build and Release Linux Binary
 
 on:
   push:
@@ -10,13 +10,7 @@ permissions:
 
 jobs:
   build-and-release:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            target: linux-x64
-            binary: gitlab-ci-ls-linux
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,9 +35,12 @@ jobs:
         run: npm run build
 
       - name: Build binary
-        run: npm run pkg -- --targets node18-${{ matrix.target }} --output bin/${{ matrix.binary }}
+        run: npm run pkg
+
+      - name: Verify binary
+        run: ls bin/ && file bin/gitlab-ci-ls-linux
 
       - name: Upload binary to release
         uses: softprops/action-gh-release@v1
         with:
-          files: bin/${{ matrix.binary }}
+          files: bin/gitlab-ci-ls-linux

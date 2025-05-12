@@ -9,6 +9,9 @@ A Language Server Protocol (LSP) implementation for GitLab CI YAML files, design
 - Document symbols for navigation
 - Formatting support
 
+## Dependencies
+- `yaml-language-server`
+
 ## Installation
 1. Clone the repository:
    ```bash
